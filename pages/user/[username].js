@@ -3,6 +3,7 @@ import Image from "next/image";
 import Head from "next/head";
 import useSWR from "swr";
 import { fetcher } from "../../lib/fetcher";
+import { InView } from "react-intersection-observer";
 
 export default function User() {
     const router = useRouter();
@@ -28,7 +29,7 @@ export default function User() {
 
             <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
                 {user && (
-                    <div className="my-10 p-2 bg-pink-500 rounded-full text-none">
+                    <div className="my-2 p-1 bg-pink-500 rounded-full text-none">
                         <Image
                             src={user.avatar_url}
                             width={150}
@@ -37,31 +38,33 @@ export default function User() {
                         />
                     </div>
                 )}
-                <h1 className="text-6xl font-bold">
-                    {user && (
-                        <>
-                            User{" "}
-                            <span className="text-pink-500 ">
-                                {user.username}
-                            </span>{" "}
-                            Found!
-                        </>
+                <InView>
+                    {({ inView, ref }) => (
+                        <h1
+                            data-scroll
+                            ref={ref}
+                            className={`text-6xl font-bold ${
+                                inView && "in-view"
+                            }`}
+                        >
+                            {user && (
+                                <span className="text-pink-500 ">
+                                    {user.username}
+                                </span>
+                            )}
+                            {error && "User Not Found!"}
+                            {!user && !error && "Finding User"}
+                        </h1>
                     )}
-                    {error && "User Not Found!"}
-                    {!user && !error && "Finding User"}
-                </h1>
-                {user && (
-                    <a
-                        href={user.website}
-                        target="_blank"
-                        className="my-4 text-blue-600 underline"
-                    >
-                        {user.website}
-                    </a>
-                )}
+                </InView>
+                {user && user.is_supporter ? (
+                    <p className="px-2 py-1 rounded-md bg-yellow-400 text-white text-lg my-2">
+                        supporter
+                    </p>
+                ) : null}
                 {user && (
                     <code className="mt-5 p-3 font-mono text-lg bg-gray-100 rounded-md">
-                        check browser console
+                        pp: {user.statistics.pp}
                     </code>
                 )}
             </main>

@@ -8,8 +8,10 @@
   "dependencies": {
     "axios": "^0.21.1",
     "next": "latest",
+    "postcss-easings": "^3.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-intersection-observer": "^8.32.0",
     "sass": "^1.38.0",
     "swr": "^0.5.6"
   },
