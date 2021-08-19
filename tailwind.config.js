@@ -10,6 +10,15 @@ module.exports = {
             fontSize: {
                 none: "0rem",
             },
+            colors: {
+                gray: {
+                    800: "#2E303F",
+                    900: "#262837",
+                },
+                yellow: {
+                    500: "#FFAA2E",
+                },
+            },
         },
     },
     variants: {

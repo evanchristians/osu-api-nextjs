@@ -30,7 +30,7 @@ export default function User() {
 
             <main className="flex flex-col items-start w-full flex-1 px-20 py-10 text-center">
                 {user && (
-                    <div className="my-2 p-1 bg-pink-500 rounded-full text-none">
+                    <div className="mb-5">
                         <Image
                             src={user.avatar_url}
                             width={75}
@@ -60,7 +60,11 @@ export default function User() {
                         </h1>
                     )}
                 </InView>
-                {user && <p className="font-bold text-xl text-pink-300">{user.playmode}</p>}
+                {user && (
+                    <p className="font-bold text-xl text-yellow-500">
+                        {user.playmode}
+                    </p>
+                )}
                 {user && (
                     <p className="mb-10">
                         {user.country.name} ({user.country.code})
