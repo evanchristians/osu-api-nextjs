@@ -1,5 +1,5 @@
 module.exports = {
-    images: {
-        domains: ["a.ppy.sh"],
-    },
+  images: {
+    domains: ["a.ppy.sh"],
+  },
 };
