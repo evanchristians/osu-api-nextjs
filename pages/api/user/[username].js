@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
     try {
         const response = await axios.get(
-            `https://osu.ppy.sh/api/v2/users/${username}/mania`,
+            `https://osu.ppy.sh/api/v2/users/${username}`,
             {
                 headers: {
                     Authorization: `Bearer ${req.accessToken}`,

@@ -57,6 +57,11 @@ export default function User() {
                         </h1>
                     )}
                 </InView>
+                {user && (
+                    <p className="text-lg mb-10">
+                      {user.country.name} ({user.country.code})
+                    </p>
+                )}
                 {user && user.is_supporter ? (
                     <p className="px-2 py-1 rounded-md bg-yellow-400 text-white text-lg my-2">
                         supporter
@@ -65,6 +70,16 @@ export default function User() {
                 {user && (
                     <code className="mt-5 p-3 font-mono text-lg bg-gray-100 rounded-md">
                         pp: {user.statistics.pp}
+                    </code>
+                )}
+                {user && (
+                    <code className="mt-5 p-3 font-mono text-lg bg-gray-100 rounded-md">
+                        global rank: {user.statistics.global_rank}
+                    </code>
+                )}
+                {user && (
+                    <code className="mt-5 p-3 font-mono text-lg bg-gray-100 rounded-md">
+                        local rank: {user.statistics.country_rank}
                     </code>
                 )}
             </main>
