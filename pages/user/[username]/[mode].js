@@ -2,14 +2,15 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Head from "next/head";
 import useSWR from "swr";
-import { fetcher } from "../../lib/fetcher";
+import { fetcher } from "../../../lib/fetcher";
 import { InView } from "react-intersection-observer";
+import { StatBlock } from "../../../components/StatBlock";
 
 export default function User() {
     const router = useRouter();
-    const { username } = router.query;
+    const { username, mode } = router.query;
     const { data: user, error } = useSWR(
-        username && `/api/user/${username}`,
+        username && `/api/user/${username}/${mode}`,
         fetcher
     );
 
@@ -27,13 +28,13 @@ export default function User() {
                 <title>User {username}</title>
             </Head>
 
-            <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
+            <main className="flex flex-col items-start w-full flex-1 px-20 py-10 text-center">
                 {user && (
                     <div className="my-2 p-1 bg-pink-500 rounded-full text-none">
                         <Image
                             src={user.avatar_url}
-                            width={150}
-                            height={150}
+                            width={75}
+                            height={75}
                             className="rounded-full"
                         />
                     </div>
@@ -43,23 +44,26 @@ export default function User() {
                         <h1
                             data-scroll
                             ref={ref}
-                            className={`text-6xl font-bold ${
+                            className={`text-4xl font-bold ${
                                 inView && "in-view"
                             }`}
                         >
                             {user && (
-                                <span className="text-pink-500 ">
-                                    {user.username}
-                                </span>
+                                <>
+                                    <span className="text-pink-500 ">
+                                        {user.username}
+                                    </span>
+                                </>
                             )}
                             {error && "User Not Found!"}
                             {!user && !error && "Finding User"}
                         </h1>
                     )}
                 </InView>
+                {user && <p className="font-bold text-xl text-pink-300">{user.playmode}</p>}
                 {user && (
-                    <p className="text-lg mb-10">
-                      {user.country.name} ({user.country.code})
+                    <p className="mb-10">
+                        {user.country.name} ({user.country.code})
                     </p>
                 )}
                 {user && user.is_supporter ? (
@@ -67,21 +71,23 @@ export default function User() {
                         supporter
                     </p>
                 ) : null}
-                {user && (
-                    <code className="mt-5 p-3 font-mono text-lg bg-gray-100 rounded-md">
-                        pp: {user.statistics.pp}
-                    </code>
-                )}
-                {user && (
-                    <code className="mt-5 p-3 font-mono text-lg bg-gray-100 rounded-md">
-                        global rank: {user.statistics.global_rank}
-                    </code>
-                )}
-                {user && (
-                    <code className="mt-5 p-3 font-mono text-lg bg-gray-100 rounded-md">
-                        local rank: {user.statistics.country_rank}
-                    </code>
-                )}
+                <div className="flex w-full gap-5">
+                    {user && (
+                        <StatBlock title="PP" score={user.statistics.pp} />
+                    )}
+                    {user && (
+                        <StatBlock
+                            title="Global Rank"
+                            score={user.statistics.global_rank}
+                        />
+                    )}
+                    {user && (
+                        <StatBlock
+                            title="Local Rank"
+                            score={user.statistics.country_rank}
+                        />
+                    )}
+                </div>
             </main>
         </div>
     );

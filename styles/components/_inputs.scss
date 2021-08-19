@@ -1,0 +1,9 @@
+select {
+    appearance: none;
+    position: relative;
+}
+
+input,
+select {
+    @apply bg-gray-800 p-3 text-xl
+}

@@ -4,6 +4,7 @@ import { InView } from "react-intersection-observer";
 
 export default function Home() {
     const [username, setUsername] = useState("");
+    const [mode, setMode] = useState("osu");
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -34,17 +35,24 @@ export default function Home() {
                     by typing their username in the input below and clicking{" "}
                     <span className="text-green-600 font-bold">Get User</span>.
                 </p>
-                <div className="flex flex-col gap-2 items-start">
+                <div className="flex flex-col gap-5 items-start">
                     <input
                         placeholder="Username"
-                        className="bg-gray-200 p-3 text-xl"
                         type="text"
                         name="username"
                         onChange={(e) => setUsername(e.target.value)}
                     />
+                    <select
+                        name="mode"
+                        onChange={(e) => setMode(e.target.value)}
+                        className="w-full"
+                    >
+                        <option value="osu">Osu!</option>
+                        <option value="mania">Mania</option>
+                    </select>
                     <a
                         className="btn mx-auto mt-3"
-                        href={`/user/${username}`}
+                        href={`/user/${username}/${mode}`}
                         disabled={username.length < 1}
                     >
                         Get User

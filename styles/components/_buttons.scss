@@ -1,8 +1,8 @@
 .btn {
-    @apply p-3 text-white bg-green-600 text-xl;
+    @apply p-3 bg-green-600 text-xl;
 
     &:disabled {
-        @apply bg-gray-100;
+        @apply bg-gray-700;
 
         pointer-events: none;
     }
