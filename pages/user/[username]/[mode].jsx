@@ -1,26 +1,24 @@
-import { useRouter } from "next/router";
-import Image from "next/image";
 import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import useSWR from "swr";
-import { fetcher } from "../../../lib/fetcher";
-import { InView } from "react-intersection-observer";
 import { StatBlock } from "../../../components/StatBlock";
+import { fetcher } from "../../../lib/fetcher";
 
 export default function User() {
   const router = useRouter();
   const { username, mode } = router.query;
+
   const { data: user, error } = useSWR(
     username && `/api/user/${username}/${mode}`,
     fetcher
   );
 
-  if (user) {
-    console.log(user);
-  }
+  const { data: scores } = useSWR(user && `/api/scores/${user.id}`, fetcher);
 
-  if (error) {
-    console.log(error);
-  }
+  user && console.log({ user });
+  scores && console.log({ scores });
+  error && console.log({ error });
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -30,7 +28,7 @@ export default function User() {
         </title>
       </Head>
 
-      <main className="flex flex-col items-start w-full flex-1 px-20 py-10">
+      <main className="flex flex-col items-start max-w-4xl w-full flex-1 px-20 py-10">
         <div className="flex items-center gap-5 mb-10">
           {user && (
             <div>
@@ -81,6 +79,60 @@ export default function User() {
               score={user.statistics.country_rank}
             />
           )}
+        </div>
+        <div className="w-full">
+          {user && (
+            <h3 className="font-bold text-yellow-500 mt-5 mb-10 text-4xl">
+              Top Plays
+            </h3>
+          )}
+          <div className="flex flex-col w-full gap-5">
+            {!scores && user && <h2 className="text-xl">loading</h2>}
+            {scores &&
+              scores.map((score, key) => (
+                <div
+                  className="bg-gray-800 p-3 w-full flex flex-col gap-4 relative overflow-hidden"
+                  key={key}
+                >
+                  <div className="flex">
+                    <p className="opacity-50">
+                      {score.beatmapset.artist_unicode}
+                    </p>
+                    <p className="ml-auto">
+                      {score.beatmap.difficulty_rating} ★
+                    </p>
+                  </div>
+                  <div className="flex">
+                    <div className="flex items-center gap-2">
+                      <span className="text-yellow-500 font-bold">
+                        {score.rank}
+                      </span>
+                      <div className="flex item-center px-2 py-1 rounded-full bg-gray-900 text-sm">
+                        <span className="text-pink-500">
+                          {score.pp.toFixed(2)} PP
+                        </span>
+                      </div>
+                      <div className="flex item-center px-2 py-1 rounded-full bg-gray-900 text-xs opacity-50">
+                        <span className="text-white ">
+                          {score.weight.pp.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="ml-auto text-yellow-500 text-lg">
+                      {score.beatmapset.title}
+                    </p>
+                  </div>
+
+                  <div className="flex play-card-cover">
+                    <Image
+                      src={score.beatmapset.covers.card}
+                      width={400}
+                      height={140}
+                    />
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
       </main>
     </div>

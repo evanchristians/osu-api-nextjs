@@ -1,0 +1,9 @@
+.play-card-cover {
+  @apply opacity-10;
+
+  clip-path: polygon(0% 99%, 21% 0%, 100% 0, 100% 100%);
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
