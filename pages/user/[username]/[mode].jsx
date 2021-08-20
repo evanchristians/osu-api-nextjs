@@ -69,7 +69,7 @@ export default function User() {
         </title>
       </Head>
 
-      <main className="flex flex-col items-start max-w-7xl w-full flex-1 p-5">
+      <main className="flex flex-col items-start max-w-7xl w-full flex-1 px-5 py-10">
         <div className="flex flex-col sm:flex-row text-center gap-5 mb-10 w-full">
           <div>
             <Image
@@ -106,7 +106,7 @@ export default function User() {
           </div>
         </div>
 
-        <div className="flex w-full text-lg sm:text-2xl mb-5 justify-center gap-3 sm:justify-start">
+        <div className="flex w-full text-lg sm:text-2xl mb-5 justify-center gap-3 sm:justify-start sm:mt-10">
           {constants.modes.map((gameMode, key) =>
             gameMode === mode ? (
               <>
