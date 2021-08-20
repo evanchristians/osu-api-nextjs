@@ -19,10 +19,6 @@ export default function User() {
 
   const { data: scores } = useSWR(user && `/api/scores/${user.id}`, fetcher);
 
-  user && console.log({ user });
-  scores && console.log({ scores });
-  error && console.log({ error });
-
   if (!mode || !username) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -69,48 +65,48 @@ export default function User() {
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <Head>
         <title>
-          {username} | {mode}
+          {user.username} | {toHumanizedMode(mode)}
         </title>
       </Head>
 
-      <main className="flex flex-col items-start max-w-7xl w-full flex-1 p-10">
-        <div className="flex items-center gap-5 mb-10">
+      <main className="flex flex-col items-start max-w-7xl w-full flex-1 p-5">
+        <div className="flex flex-col sm:flex-row text-center gap-5 mb-10 w-full">
           <div>
             <Image
               src={user.avatar_url}
-              width={100}
-              height={100}
+              width={150}
+              height={150}
               className="rounded-full"
             />
           </div>
 
-          <div className="flex flex-col">
-            <h1 className="text-4xl font-bold flex items-center gap-2">
-              <span className="text-pink-500 ">{user.username}</span>{" "}
+          <div className="flex flex-col items-center text-center w-full sm:items-start">
+            <h1 className="text-4xl font-bold flex items-center gap-2 mb-5">
+              {user.username}{" "}
               <span className="flex items-center justify-center text-sm w-8 h-8 rounded-full bg-gray-800">
                 {user.country.code}
               </span>
             </h1>
 
             {user.is_supporter && (
-              <p className="flex items-center self-start mt-2 px-2 py-1 bg-yellow-500 rounded-full text-sm ">
+              <p className="flex items-center sm:self-start mt-2 px-2 py-1 bg-yellow-500 rounded-full text-xs ">
                 Supporter
               </p>
             )}
 
             {user.is_online ? (
-              <p className="flex  items-center self-start mt-2 px-2 py-1 rounded-full text-xs bg-green-500">
+              <p className="flex  items-center sm:self-start mt-2 px-2 py-1 rounded-full text-xs bg-green-500">
                 Online
               </p>
             ) : (
-              <p className="flex items-center self-start mt-2 px-2 py-1 bg-red-600 rounded-full text-xs">
+              <p className="flex items-center sm:self-start mt-2 px-2 py-1 bg-red-600 rounded-full text-xs">
                 Offline
               </p>
             )}
           </div>
         </div>
 
-        <div className="flex text-2xl mb-5 items-end gap-3">
+        <div className="flex w-full text-lg sm:text-2xl mb-5 justify-center gap-3 sm:justify-start">
           {constants.modes.map((gameMode, key) =>
             gameMode === mode ? (
               <>
@@ -132,7 +128,7 @@ export default function User() {
           )}
         </div>
 
-        <div className="flex w-full gap-5">
+        <div className="flex flex-wrap w-full gap-5">
           <StatBlock title="PP" score={user.statistics.pp} />
           <StatBlock title="Global Rank" score={user.statistics.global_rank} />
           <StatBlock title="Local Rank" score={user.statistics.country_rank} />
@@ -140,18 +136,23 @@ export default function User() {
         </div>
 
         <div className="w-full">
-          <h3 className="font-bold text-yellow-500 my-5 text-4xl">Top Plays</h3>
+          <h3 className="font-bold text-yellow-500 my-10 text-4xl">Top Plays</h3>
 
-          <div className="flex flex-col w-full gap-5">
-            {!scores && <h2 className="text-xl">loading</h2>}
+          <div className="flex w-full gap-5 flex-wrap">
+            {!scores && (
+              <h2 className="text-4xl text-center opacity-50">Loading...</h2>
+            )}
 
             {scores &&
               scores.map((score, key) => (
                 <div
-                  className="bg-gray-800 p-3 w-full flex flex-col gap-4 relative overflow-hidden"
+                  className="bg-gray-800 p-3 flex-grow flex flex-col gap-4 relative overflow-hidden"
                   key={key}
                 >
-                  <div className="flex">
+                  <div className="flex gap-2">
+                    <span className="flex w-5 h-5 bg-yellow-500 text-gray-900 items-center justify-center rounded-full font-bold">
+                      {key + 1}
+                    </span>
                     <p className="opacity-50">
                       {score.beatmapset.artist_unicode}
                     </p>
@@ -161,8 +162,8 @@ export default function User() {
                     </p>
                   </div>
 
-                  <div className="flex">
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center">
+                    <div className="flex items-center gap-2 mt-3 sm:mt-0">
                       <span className="text-yellow-500 font-bold">
                         {score.rank}
                       </span>
@@ -180,7 +181,7 @@ export default function User() {
                       </div>
                     </div>
 
-                    <p className="ml-auto text-yellow-500 text-lg">
+                    <p className="ml-auto mt-3 sm:mt-0 text-yellow-500 text-lg pl-4">
                       {score.beatmapset.title}
                     </p>
                   </div>
