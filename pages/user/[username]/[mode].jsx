@@ -1,9 +1,12 @@
 import Head from "next/head";
+import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { StatBlock } from "../../../components/StatBlock";
 import { fetcher } from "../../../lib/fetcher";
+import { toHumanizedMode } from "../../../utils/toHumanizedMode";
+import { constants } from "../../../lib/constants";
 
 export default function User() {
   const router = useRouter();
@@ -20,12 +23,25 @@ export default function User() {
   scores && console.log({ scores });
   error && console.log({ error });
 
+  if (!mode || !username) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <Head>
+          <title>Loading...</title>
+        </Head>
+
+        <h1 className="text-4xl font-bold">Loading...</h1>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <Head>
           <title>User {username} Not Found!</title>
         </Head>
+
         <h1 className="text-4xl font-bold">
           User <span className="text-pink-500 ">{username}</span> Not Found
         </h1>
@@ -39,8 +55,10 @@ export default function User() {
         <Head>
           <title>Loading {username}'s Profile</title>
         </Head>
+
         <h1 className="text-4xl font-bold">
-          Loading <span className="text-pink-500 ">{username}'s</span>{" "}
+          Loading <span className="text-pink-500">{username}'s</span>{" "}
+          <span className="text-yellow-500">{toHumanizedMode(mode)}</span>{" "}
           Profile...
         </h1>
       </div>
@@ -60,28 +78,57 @@ export default function User() {
           <div>
             <Image
               src={user.avatar_url}
-              width={80}
-              height={80}
+              width={100}
+              height={100}
               className="rounded-full"
             />
           </div>
 
-          <div>
-            <h1 className="text-4xl font-bold">
-              <span className="text-pink-500 ">{user.username}</span>
+          <div className="flex flex-col">
+            <h1 className="text-4xl font-bold flex items-center gap-2">
+              <span className="text-pink-500 ">{user.username}</span>{" "}
+              <span className="flex items-center justify-center text-sm w-8 h-8 rounded-full bg-gray-800">
+                {user.country.code}
+              </span>
             </h1>
 
-            <p className="font-bold text-xl text-yellow-500">{mode}</p>
+            {user.is_supporter && (
+              <p className="flex items-center self-start mt-2 px-2 py-1 bg-yellow-500 rounded-full text-sm ">
+                Supporter
+              </p>
+            )}
 
-            <p>
-              {user.country.name} ({user.country.code})
-            </p>
+            {user.is_online ? (
+              <p className="flex  items-center self-start mt-2 px-2 py-1 rounded-full text-xs bg-green-500">
+                Online
+              </p>
+            ) : (
+              <p className="flex items-center self-start mt-2 px-2 py-1 bg-red-600 rounded-full text-xs">
+                Offline
+              </p>
+            )}
           </div>
+        </div>
 
-          {user.is_supporter && (
-            <p className="px-2 py-1 rounded-md bg-yellow-400 text-white text-lg my-2">
-              supporter
-            </p>
+        <div className="flex text-2xl mb-5 items-end gap-3">
+          {constants.modes.map((gameMode, key) =>
+            gameMode === mode ? (
+              <>
+                <h3 key={key} className="text-yellow-500">
+                  {toHumanizedMode(gameMode)}
+                </h3>
+                {key < constants.modes.length - 1 && <span>&middot;</span>}
+              </>
+            ) : (
+              <>
+                <Link key={key} href={`/user/${username}/${gameMode}`}>
+                  <a className="opacity-30 hover:opacity-100">
+                    {toHumanizedMode(gameMode)}
+                  </a>
+                </Link>
+                {key < constants.modes.length - 1 && <span>&middot;</span>}
+              </>
+            )
           )}
         </div>
 
@@ -89,12 +136,11 @@ export default function User() {
           <StatBlock title="PP" score={user.statistics.pp} />
           <StatBlock title="Global Rank" score={user.statistics.global_rank} />
           <StatBlock title="Local Rank" score={user.statistics.country_rank} />
+          <StatBlock title="Play Count" score={user.statistics.play_count} />
         </div>
 
         <div className="w-full">
-          <h3 className="font-bold text-yellow-500 mt-5 mb-10 text-4xl">
-            Top Plays
-          </h3>
+          <h3 className="font-bold text-yellow-500 my-5 text-4xl">Top Plays</h3>
 
           <div className="flex flex-col w-full gap-5">
             {!scores && <h2 className="text-xl">loading</h2>}
