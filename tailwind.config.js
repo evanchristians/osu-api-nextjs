@@ -6,6 +6,7 @@ module.exports = {
     extend: {
       fontSize: {
         none: "0rem",
+        '4xl': "clamp(1.5rem, 3vw, 2.25rem)"
       },
       colors: {
         gray: {

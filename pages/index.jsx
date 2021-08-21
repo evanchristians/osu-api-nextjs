@@ -1,3 +1,4 @@
+import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
@@ -5,6 +6,7 @@ import { InView } from "react-intersection-observer";
 import { constants } from "../lib/constants";
 
 export default function Home() {
+  const router = useRouter();
   const [username, setUsername] = useState("BTMC");
 
   return (
@@ -28,24 +30,32 @@ export default function Home() {
           )}
         </InView>
         <p className="text-xl my-20 max-w-xs">
-          Get data for an <span className="text-pink-500 font-semibold">Osu!</span>{" "}
-          user by typing their username in the input below & clicking{" "}
+          Get data for an{" "}
+          <span className="text-pink-500 font-semibold">Osu!</span> user by
+          typing their username in the input below & clicking{" "}
           <span className="text-green-600 font-semibold">Get User</span>.
         </p>
-        <div className="flex flex-col gap-5 items-start">
-          <input
-            placeholder="Username"
-            type="text"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <Link href={`/user/${username}/${constants.modes[0]}`}>
-            <a className="btn mx-auto mt-3" disabled={username.length < 1}>
-              Get User
-            </a>
-          </Link>
-        </div>
+        <form
+          onSubmit={(ev) => {
+            ev.preventDefault()
+            router.push(`/user/${username}/${constants.modes[0]}`);
+          }}
+        >
+          <div className="flex flex-col gap-5 items-start">
+            <input
+              placeholder="Username"
+              type="text"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+              type="submit"
+              value="Get User"
+              className="btn mx-auto mt-3"
+            />
+          </div>
+        </form>
       </main>
     </div>
   );
